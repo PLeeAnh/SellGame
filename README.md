@@ -27,9 +27,9 @@ Website bán game - Spring Boot project
 5. Click **Clone**
 
 ## Quy tắc quan trọng (đọc kỹ!):
-🔴 KHÔNG push trực tiếp vào main
-🟢 Mỗi bạn tạo nhánh riêng (branch) để code
-🔵 Xong thì tạo Pull Request để cả team review
+- KHÔNG push trực tiếp vào main
+- Mỗi bạn tạo nhánh riêng (branch) để code
+- Xong thì tạo Pull Request để cả team review
 
 ## Còn những người nào ko biết thì đây
 1.Lên GitHub.com
