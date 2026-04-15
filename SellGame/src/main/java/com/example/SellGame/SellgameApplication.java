@@ -1,4 +1,4 @@
-package com.example.SELLGAME;
+package com.example.SellGame;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
