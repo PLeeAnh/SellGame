@@ -1,4 +1,4 @@
-package com.example.SellGame.controller.TaiKhoan;
+package com.example.SellGame.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
