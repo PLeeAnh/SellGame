@@ -1,9 +1,9 @@
 package com.example.SellGame.Service;
 
 import com.example.SellGame.Repository.TaiKhoanRepository;
-import com.example.SellGame.controller.TaiKhoan.KhachHang;
+import com.example.SellGame.entity.KhachHang;
 import com.example.SellGame.Repository.KhachHangRepository;
-import com.example.SellGame.controller.TaiKhoan.TaiKhoan;
+import com.example.SellGame.entity.TaiKhoan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
