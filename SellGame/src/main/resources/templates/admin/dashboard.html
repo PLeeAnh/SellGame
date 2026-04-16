@@ -1,15 +1,106 @@
-<!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div th:fragment="content">
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <h3 class="page-title text-primary fw-bold text-uppercase">
+                <i class="mdi mdi-view-dashboard"></i> Bảng Điều Khiển Quản Trị
+            </h3>
+            <p class="text-muted">Tổng quan tình hình kinh doanh của hệ thống SELLGAME</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover shadow-sm">
+                <div class="box bg-cyan text-center rounded p-4">
+                    <h1 class="font-light text-white"><i class="mdi mdi-gamepad-variant"></i></h1>
+                    <h5 class="text-white mt-2">Tổng Số Game</h5>
+                    <h3 class="text-white fw-bold">156</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover shadow-sm">
+                <div class="box bg-success text-center rounded p-4">
+                    <h1 class="font-light text-white"><i class="mdi mdi-account-multiple"></i></h1>
+                    <h5 class="text-white mt-2">Khách Hàng</h5>
+                    <h3 class="text-white fw-bold">1,240</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover shadow-sm">
+                <div class="box bg-warning text-center rounded p-4">
+                    <h1 class="font-light text-white"><i class="mdi mdi-receipt"></i></h1>
+                    <h5 class="text-white mt-2">Đơn Hàng Tuần Này</h5>
+                    <h3 class="text-white fw-bold">45</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-hover shadow-sm">
+                <div class="box bg-danger text-center rounded p-4">
+                    <h1 class="font-light text-white"><i class="mdi mdi-currency-usd"></i></h1>
+                    <h5 class="text-white mt-2">Doanh Thu (VNĐ)</h5>
+                    <h3 class="text-white fw-bold">15.5M</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h4 class="card-title fw-bold text-info border-bottom pb-2">
+                        <i class="mdi mdi-information-outline"></i> Trạng thái hệ thống
+                    </h4>
+                    
+                    <div class="mt-4">
+                        <p class="fs-5">
+                            Chào mừng quản trị viên <strong class="text-danger" th:text="${session.userLogged.hoTen}"></strong> quay trở lại làm việc!
+                        </p>
+                        
+                        <div class="alert alert-success mt-3 shadow-sm">
+                            <i class="mdi mdi-check-circle fs-4 me-2 align-middle"></i> 
+                            Hệ thống đăng nhập và phân quyền đã hoạt động hoàn hảo 100%. Giao diện Dashboard đã được ghép nối thành công vào layout!
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-5 fw-bold"><i class="mdi mdi-account-clock"></i> Khách hàng vừa truy cập</h5>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Email</th>
+                                    <th>Quyền</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td th:text="${session.userLogged.email}"></td>
+                                    <td><span class="badge bg-danger">ADMIN</span></td>
+                                    <td class="text-success fw-bold">Đang Online</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>khachhang123@gmail.com</td>
+                                    <td><span class="badge bg-primary">CUSTOMER</span></td>
+                                    <td class="text-muted">Offline</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
