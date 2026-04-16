@@ -1,0 +1,27 @@
+<div th:fragment="content">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card shadow border-top border-primary border-4">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4 text-primary fw-bold">ĐĂNG NHẬP</h3>
+                    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                    <form th:action="@{/dang-nhap}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu</label>
+                            <input type="password" name="matKhau" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fs-5 mt-2">Đăng Nhập</button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        Chưa có tài khoản? <a th:href="@{/dang-ky}" class="text-decoration-none fw-bold">Đăng ký ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

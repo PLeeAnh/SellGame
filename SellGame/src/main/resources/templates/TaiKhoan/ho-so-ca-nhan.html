@@ -1,0 +1,29 @@
+<div th:fragment="content">
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="mdi mdi-account-circle text-primary" style="font-size: 80px;"></i>
+                        <h3 class="card-title text-primary fw-bold">Thông Tin Cá Nhân</h3>
+                    </div>
+                    <hr>
+                    <div class="fs-5 ms-md-5 mt-4">
+                        <p class="mb-3"><strong>Họ và tên:</strong> <span th:text="${user.hoTen}"></span></p>
+                        <p class="mb-3"><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                        <p class="mb-3"><strong>Số điện thoại:</strong> 
+                            <span th:if="${user.soDienThoai != null and user.soDienThoai != ''}" th:text="${user.soDienThoai}"></span>
+                            <span th:unless="${user.soDienThoai != null and user.soDienThoai != ''}" class="text-muted fst-italic">Chưa cập nhật</span>
+                        </p>
+                        <p class="mb-3"><strong>Vai trò:</strong> <span class="badge bg-info text-dark rounded-pill" th:text="${user.vaiTro}"></span></p>
+                    </div>
+                    <hr class="mt-4">
+                    <div class="text-center mt-4">
+                        <a th:href="@{/}" class="btn btn-secondary px-4 me-2">Về Trang Chủ</a>
+                        <a th:href="@{/logout}" class="btn btn-danger px-4">Đăng Xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
