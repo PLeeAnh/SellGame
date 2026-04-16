@@ -32,9 +32,9 @@ Website bán game - Spring Boot project
 - Xong thì tạo Pull Request để cả team review
 
 ## Còn những người nào ko biết thì đây
-1.Lên GitHub.com
-2.Vào repository SELLGAME
-3.Ấn current branch (main) ấn để đổi nhánh riêng của mình và viết code xong nhớ làm bước 4
-4.Sẽ thấy thông báo về nhánh mới vừa push
-5.Click Compare & pull request
-6.Click Create pull request
+- Lên GitHub.com
+- Vào repository SELLGAME
+- Ấn current branch (main) ấn để đổi nhánh riêng của mình và viết code xong nhớ làm bước 4
+- Sẽ thấy thông báo về nhánh mới vừa push
+- Click Compare & pull request
+- Click Create pull request
