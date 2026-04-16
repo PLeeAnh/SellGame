@@ -4,15 +4,19 @@
  */
 package com.example.SellGame.entity;
 
+<<<<<<< Updated upstream
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import java.util.Date;
 
+=======
+>>>>>>> Stashed changes
 /**
  *
  * @author Administrator
  */
+<<<<<<< Updated upstream
 @Entity
 @Table(name = "Game")
 public class Game {
@@ -264,5 +268,8 @@ public class Game {
         this.ngayCapNhat = ngayCapNhat;
     }
     
+=======
+public class Game {
+>>>>>>> Stashed changes
     
 }

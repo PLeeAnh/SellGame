@@ -4,16 +4,20 @@
  */
 package com.example.SellGame.entity;
 
+<<<<<<< Updated upstream
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+=======
+>>>>>>> Stashed changes
 /**
  *
  * @author Administrator
  */
+<<<<<<< Updated upstream
 @Entity
 @Table(name = "DanhMuc")
 public class DanhMuc {
@@ -55,5 +59,8 @@ public class DanhMuc {
     public void setMo_ta(String mo_ta) {
         this.mo_ta = mo_ta;
     }
+=======
+public class DanhMuc {
+>>>>>>> Stashed changes
     
 }
