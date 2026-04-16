@@ -1,5 +1,6 @@
-package com.example.SellGame.controller.TaiKhoan;
+package com.example.SellGame.Repository;
 
+import com.example.SellGame.controller.TaiKhoan.TaiKhoan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
