@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  ADMIN TOPBAR HEADER FRAGMENT                            ║
+        ║                                                          ║
+        ║  Cách dùng trong admin/layout.html:                      ║
+        ║  <div th:replace="~{admin/fragments/header :: topbar}">  ║
+        ║                                                          ║
+        ║  Topbar tự nhận pageTitle từ model của controller        ║
+        ║  VD: model.addAttribute("pageTitle","Quản lý game")      ║
+        ╚══════════════════════════════════════════════════════════╝
+        -->
+        <div th:fragment="topbar" id="sg-topbar">
+
+            <!-- Nút toggle sidebar (chỉ hiện trên mobile) -->
+            <button id="sg-toggle" onclick="sgToggleSidebar()" title="Mở/đóng menu">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Tiêu đề trang hiện tại -->
+            <span class="sg-page-title" th:text="${pageTitle ?: 'Admin'}">Admin</span>
+
+            <!-- Nút xem cửa hàng -->
+            <a href="/" target="_blank"
+               class="btn btn-outline-secondary btn-sm"
+               style="font-size:12px;">
+                <i class="bi bi-shop me-1"></i>
+                Cửa hàng
+            </a>
+
+            <!-- Theme toggle (dark / light) -->
+            <button class="theme-toggle" onclick="sgToggleTheme()" id="themeBtn"
+                    title="Đổi theme sáng/tối"
+                    style="background:none; border:1px solid #dee2e6; border-radius:50%;
+                    width:32px; height:32px; display:flex; align-items:center;
+                    justify-content:center; cursor:pointer; color:#6c757d;
+                    font-size:14px;">
+                <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+            </button>
+
+            <!-- User dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-sm border d-flex align-items-center gap-2"
+                        data-bs-toggle="dropdown"
+                        style="font-size:13px; padding:4px 10px;">
+                    <!-- Avatar circle -->
+                    <div style="width:26px; height:26px;
+                         background:#0f3460; border-radius:50%;
+                         display:flex; align-items:center; justify-content:center;
+                         color:white; font-size:11px; font-weight:600;">
+                        A
+                    </div>
+                    <span th:text="${session.userLogged != null ? session.userLogged.hoTen : 'Admin'}">
+                        Admin
+                    </span>
+                    <i class="bi bi-chevron-down" style="font-size:10px;"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" style="min-width:160px; font-size:13px;">
+                    <li>
+                        <span class="dropdown-item-text text-muted" style="font-size:11px;">
+                            Đăng nhập với tư cách admin
+                        </span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="bi bi-box-arrow-left me-2 text-danger"></i>Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <script>
+            /*
+             * THEME TOGGLE
+             * Lưu lựa chọn vào localStorage → nhớ sau khi reload
+             * Sửa icon và label bên dưới nếu muốn đổi giao diện
+             */
+            (function () {
+                const saved = localStorage.getItem('sg-theme') || 'light';
+                document.documentElement.setAttribute('data-theme', saved);
+                updateThemeIcon(saved);
+            })();
+
+            function sgToggleTheme() {
+                const current = document.documentElement.getAttribute('data-theme') || 'light';
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('sg-theme', next);
+                updateThemeIcon(next);
+            }
+
+            function updateThemeIcon(theme) {
+                const icon = document.getElementById('themeIcon');
+                if (!icon)
+                    return;
+                // dark → hiện sun icon để chuyển sang light
+                // light → hiện moon icon để chuyển sang dark
+                icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            }
+
+            function sgToggleSidebar() {
+                document.getElementById('sg-sidebar').classList.toggle('show');
+            }
+
+            // Đóng sidebar khi click ngoài (mobile)
+            document.addEventListener('click', function (e) {
+                const sidebar = document.getElementById('sg-sidebar');
+                const toggle = document.getElementById('sg-toggle');
+                if (!sidebar || !toggle)
+                    return;
+                if (window.innerWidth <= 768
+                        && !sidebar.contains(e.target)
+                        && !toggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                }
+            });
+
+            // Tự đóng alert sau 4s
+            window.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    document.querySelectorAll('.alert.alert-success, .alert.alert-danger').forEach(el => {
+                        try {
+                            const a = bootstrap.Alert.getOrCreateInstance(el);
+                            a.close();
+                        } catch (err) {
+                        }
+                    });
+                }, 4000);
+            });
+        </script>
+
+    </body>
+</html>

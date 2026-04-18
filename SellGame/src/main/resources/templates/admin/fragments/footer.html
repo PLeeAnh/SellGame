@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  ADMIN FOOTER FRAGMENT                                   ║
+        ║  Chứa: Bootstrap JS + scripts dùng chung admin          ║
+        ║                                                          ║
+        ║  Cách dùng (cuối body trong admin/layout.html):          ║
+        ║  <div th:replace="~{admin/fragments/footer :: scripts}"> ║
+        ╚══════════════════════════════════════════════════════════╝
+        -->
+        <div th:fragment="scripts">
+
+            <!-- Bootstrap 5 JS (bundle gồm Popper) -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+            <!--
+                Bổ sung thêm thư viện tại đây nếu cần
+                VD Chart.js cho dashboard:
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            -->
+
+            <script>
+                /*
+                 * SCRIPTS DÙNG CHUNG CHO ADMIN
+                 * ─────────────────────────────────────────────────
+                 *
+                 * 1. Khởi tạo theme từ localStorage (chạy sớm nhất)
+                 * 2. Tooltips Bootstrap
+                 * 3. Xác nhận xóa có nút Cancel đẹp hơn
+                 */
+
+                // 1. Theme: đọc từ localStorage và apply ngay
+                (function () {
+                    const t = localStorage.getItem('sg-theme');
+                    if (t)
+                        document.documentElement.setAttribute('data-theme', t);
+                })();
+
+                // 2. Khởi tạo tất cả tooltip trên trang
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                        new bootstrap.Tooltip(el);
+                    });
+                });
+            </script>
+
+            <!-- Admin footer bar (hiển thị version) -->
+            <div style="position:fixed; bottom:0; left:var(--sidebar-w); right:0;
+                 background:#f8f9fb; border-top:1px solid #e5e9ef;
+                 padding:4px 20px; font-size:11px; color:#aaa;
+                 display:flex; justify-content:space-between; z-index:100;"
+                 id="sg-footer-bar">
+                <span>SELLGAME Admin v1.0</span>
+                <span th:text="'© 2026 SELLGAME'">© 2026 SELLGAME</span>
+            </div>
+
+            <!-- Đẩy content lên tránh bị footer bar che -->
+            <div style="height: 32px;"></div>
+
+            <style>
+                @media (max-width: 768px) {
+                    #sg-footer-bar {
+                        left: 0;
+                    }
+                }
+            </style>
+
+        </div>
+
+    </body>
+</html>

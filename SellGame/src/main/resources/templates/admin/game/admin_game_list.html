@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head><title>Quản lý game</title></head>
+<body>
+<div layout:fragment="body-content">
+
+    <!-- Toast thông báo (tự động biến mất sau 4s nhờ JS trong layout) -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Header trang -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-controller me-2 text-primary"></i>Quản lý Game
+            </h5>
+            <span class="text-muted small">
+                Tổng: <strong th:text="${gamePage.totalElements}">0</strong> game
+            </span>
+        </div>
+        <a th:href="@{/admin/game/create}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Thêm game mới
+        </a>
+    </div>
+
+    <!-- Bộ lọc tìm kiếm -->
+    <div class="card mb-4">
+        <div class="card-body py-3">
+            <form th:action="@{/admin/game}" method="get"
+                  class="row g-2 align-items-end">
+                <!-- Ô tìm kiếm -->
+                <div class="col-md-5">
+                    <label class="form-label small text-muted mb-1">Tìm kiếm game</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="keyword"
+                               th:value="${keyword}"
+                               class="form-control"
+                               placeholder="Nhập tên game...">
+                    </div>
+                </div>
+
+                <!-- Lọc trạng thái -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Trạng thái</label>
+                    <select name="trangThai" class="form-select">
+                        <option value="">-- Tất cả --</option>
+                        <option value="ACTIVE"
+                                th:selected="${trangThai == 'ACTIVE'}">🟢 Đang bán</option>
+                        <option value="COMING_SOON"
+                                th:selected="${trangThai == 'COMING_SOON'}">🔵 Sắp ra mắt</option>
+                        <option value="INACTIVE"
+                                th:selected="${trangThai == 'INACTIVE'}">🔴 Đã ẩn</option>
+                    </select>
+                </div>
+
+                <!-- Nút lọc -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel me-1"></i> Lọc
+                    </button>
+                </div>
+
+                <!-- Nút xóa lọc -->
+                <div class="col-md-2">
+                    <a th:href="@{/admin/game}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-x-circle me-1"></i> Xóa lọc
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách game -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width:50px" class="text-center">#</th>
+                            <th style="width:80px" class="text-center">Ảnh</th>
+                            <th>Tên game</th>
+                            <th style="width:120px">Danh mục</th>
+                            <th style="width:160px">Giá bán</th>
+                            <th style="width:80px" class="text-center">Lượt mua</th>
+                            <th style="width:120px" class="text-center">Trạng thái</th>
+                            <th style="width:130px" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- Khi không có game nào -->
+                        <tr th:if="${gamePage.totalElements == 0}">
+                            <td colspan="8" class="text-center text-muted py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                                <span th:if="${keyword != ''}">
+                                    Không tìm thấy game nào với từ khóa "<b th:text="${keyword}"></b>"
+                                </span>
+                                <span th:if="${keyword == ''}">Chưa có game nào</span>
+                            </td>
+                        </tr>
+
+                        <!--
+                            Mỗi hàng = 1 game
+                            stat.count = số thứ tự trong trang hiện tại
+                        -->
+                        <tr th:each="game, stat : ${gamePage.content}">
+
+                            <!-- STT -->
+                            <td class="text-center text-muted"
+                                th:text="${currentPage * 10 + stat.count}"></td>
+
+                            <!-- Ảnh bìa -->
+                            <td class="text-center">
+                                <img th:src="${game.anhBia != null and !#strings.isEmpty(game.anhBia)}
+                                              ? ${game.anhBia}
+                                              : '/images/no-image.jpg'"
+                                     alt="Ảnh game"
+                                     style="width:60px; height:45px;
+                                            object-fit:cover; border-radius:6px;">
+                            </td>
+
+                            <!-- Tên game + nhà phát hành -->
+                            <td>
+                                <div class="fw-semibold" th:text="${game.tenGame}"></div>
+                                <small class="text-muted" th:text="${game.nhaPhatHanh}"></small>
+                                <!-- Badge sale -->
+                                <span th:if="${game.phanTramGiam > 0}"
+                                      class="badge bg-danger ms-1" style="font-size:10px;"
+                                      th:text="'-' + ${game.phanTramGiam} + '%'">
+                                </span>
+                            </td>
+
+                            <!-- Danh mục -->
+                            <td>
+                                <span class="badge"
+                                      style="background:#e8f0fe; color:#1a73e8; font-weight:500;"
+                                      th:text="${game.danhMuc != null ? game.danhMuc.tenDanhMuc : 'N/A'}">
+                                </span>
+                            </td>
+
+                            <!-- Giá bán (hiển thị giá gốc nếu không có giảm, hoặc cả 2 nếu có) -->
+                            <td>
+                                <!-- Có giảm giá -->
+                                <div th:if="${game.phanTramGiam != null and game.phanTramGiam > 0}">
+                                    <small class="text-decoration-line-through text-muted"
+                                           th:text="${#numbers.formatInteger(game.giaVnd, 0, 'COMMA') + '₫'}">
+                                    </small>
+                                    <br>
+                                    <span class="text-danger fw-bold"
+                                          th:text="${#numbers.formatInteger(game.giaGiam, 0, 'COMMA') + '₫'}">
+                                    </span>
+                                </div>
+                                <!-- Không giảm giá -->
+                                <div th:unless="${game.phanTramGiam != null and game.phanTramGiam > 0}"
+                                     class="fw-semibold"
+                                     th:text="${#numbers.formatInteger(game.giaVnd, 0, 'COMMA') + '₫'}">
+                                </div>
+                            </td>
+
+                            <!-- Lượt mua -->
+                            <td class="text-center">
+                                <span class="fw-semibold" th:text="${game.luotMua ?: 0}"></span>
+                            </td>
+
+                            <!-- Trạng thái -->
+                            <td class="text-center">
+                                <span class="badge rounded-pill px-3 py-2"
+                                      th:classappend="${game.trangThai == 'ACTIVE'}    ? 'bg-success'
+                                                    : (${game.trangThai == 'INACTIVE'} ? 'bg-secondary'
+                                                    : 'bg-info')"
+                                      th:text="${game.trangThai == 'ACTIVE'}    ? 'Đang bán'
+                                             : (${game.trangThai == 'INACTIVE'} ? 'Đã ẩn'
+                                             : 'Sắp ra mắt')">
+                                </span>
+                            </td>
+
+                            <!-- Thao tác -->
+                            <td class="text-center">
+                                <!-- Nút sửa -->
+                                <a th:href="@{/admin/game/edit/{id}(id=${game.id})}"
+                                   class="btn btn-sm btn-outline-primary me-1"
+                                   title="Sửa game">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <!-- Nút ẩn (chỉ hiện khi game đang ACTIVE hoặc COMING_SOON) -->
+                                <a th:if="${game.trangThai != 'INACTIVE'}"
+                                   th:href="@{/admin/game/delete/{id}(id=${game.id})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Ẩn game"
+                                   onclick="return confirm('Ẩn game này?\nGame sẽ không hiển thị trên cửa hàng.')">
+                                    <i class="bi bi-eye-slash"></i>
+                                </a>
+
+                                <!-- Nút kích hoạt lại (chỉ hiện khi game bị ẩn) -->
+                                <a th:if="${game.trangThai == 'INACTIVE'}"
+                                   th:href="@{/admin/game/restore/{id}(id=${game.id})}"
+                                   class="btn btn-sm btn-outline-success"
+                                   title="Kích hoạt lại">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Phân trang (chỉ hiển thị khi có nhiều hơn 1 trang) -->
+        <div th:if="${totalPages > 1}"
+             class="card-footer d-flex justify-content-between align-items-center py-2">
+            <small class="text-muted">
+                Trang <strong th:text="${currentPage + 1}"></strong>
+                / <strong th:text="${totalPages}"></strong>
+                &nbsp;·&nbsp;
+                Tổng <strong th:text="${gamePage.totalElements}"></strong> game
+            </small>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <!-- Nút trang trước -->
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/game(keyword=${keyword},trangThai=${trangThai},page=${currentPage-1})}">
+                            &laquo;
+                        </a>
+                    </li>
+
+                    <!-- Số trang (hiển thị tối đa 5 trang) -->
+                    <th:block th:each="i : ${#numbers.sequence(
+                        T(Math).max(0, currentPage - 2),
+                        T(Math).min(totalPages - 1, currentPage + 2))}">
+                        <li class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:text="${i + 1}"
+                               th:href="@{/admin/game(keyword=${keyword},trangThai=${trangThai},page=${i})}">
+                            </a>
+                        </li>
+                    </th:block>
+
+                    <!-- Nút trang sau -->
+                    <li class="page-item"
+                        th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/game(keyword=${keyword},trangThai=${trangThai},page=${currentPage+1})}">
+                            &raquo;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

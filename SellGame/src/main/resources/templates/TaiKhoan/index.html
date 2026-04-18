@@ -4,6 +4,10 @@
     
     <div th:if="${session.userLogged != null}" class="mt-4 p-4 bg-white shadow-sm rounded border-top border-success border-4">
         <h3 class="text-success">🎉 Xin chào, <span th:text="${session.userLogged.hoTen}"></span>!</h3>
-        
+        <p>Chúc bạn có trải nghiệm mua sắm vui vẻ!</p>
+    </div>
+    
+    <div th:if="${session.userLogged == null}" class="mt-4 p-4 bg-light rounded">
+        <p>Vui lòng <a th:href="@{/dang-nhap}" class="btn btn-primary">Đăng nhập</a> để mua game!</p>
     </div>
 </div>

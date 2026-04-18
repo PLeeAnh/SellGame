@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  ADMIN SIDEBAR MENU FRAGMENT                             ║
+        ║                                                          ║
+        ║  Cách dùng trong admin/layout.html:                      ║
+        ║  <div th:replace="~{admin/fragments/menu :: sidebar}">   ║
+        ║                                                          ║
+        ║  THÊM MENU ITEM: copy 1 khối <a class="sg-nav-item">     ║
+        ║    và sửa href + icon (bi-xxx) + text                    ║
+        ║                                                          ║
+        ║  ICON: tìm tại https://icons.getbootstrap.com/           ║
+        ╚══════════════════════════════════════════════════════════╝
+        -->
+        <nav th:fragment="sidebar" id="sg-sidebar">
+
+            <a href="/admin/game" class="sg-brand">
+                <div class="sg-brand-icon"><i class="bi bi-controller"></i></div>
+                <div><span class="sg-brand-text">SELLGAME</span><span class="sg-brand-sub">Admin Panel</span></div>
+            </a>
+
+            <div style="padding: 8px 0;">
+                <div class="sg-nav-label">Tổng quan</div>
+                <a href="/admin/thongke" class="sg-nav-item" th:classappend="${currentUri != null and currentUri.startsWith('/admin/thongke')} ? ' active'">
+                    <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                </a>
+
+                <div class="sg-nav-label">Nội dung</div>
+                <a href="/admin/game" class="sg-nav-item" th:classappend="${currentUri != null and currentUri.startsWith('/admin/game')} ? ' active'">
+                    <i class="bi bi-controller"></i><span>Quản lý Game</span>
+                </a>
+
+                <a href="/admin/danhmuc" class="sg-nav-item" th:classappend="${currentUri != null and currentUri.startsWith('/admin/danhmuc')} ? ' active'">
+                    <i class="bi bi-grid-3x3-gap"></i><span>Danh mục</span>
+                </a>
+
+                <a href="/admin/khuyenmai" class="sg-nav-item" th:classappend="${currentUri != null and currentUri.startsWith('/admin/khuyenmai')} ? ' active'">
+                    <i class="bi bi-tag"></i><span>Khuyến mãi</span>
+                </a>
+
+                <div class="sg-nav-label">Kinh doanh</div>
+                <a href="/admin/hoadon" class="sg-nav-item" th:classappend="${currentUri != null and currentUri.startsWith('/admin/hoadon')} ? ' active'">
+                    <i class="bi bi-receipt"></i><span>Đơn hàng</span>
+                </a>
+
+                <a href="/admin/thongke" class="sg-nav-item">
+                    <i class="bi bi-bar-chart-line"></i><span>Thống kê</span>
+                </a>
+
+                <div class="sg-nav-label">Hệ thống</div>
+                <a href="/" class="sg-nav-item" target="_blank"><i class="bi bi-shop"></i><span>Xem cửa hàng</span></a>
+                <hr class="sg-nav-divider">
+                <a href="/logout" class="sg-nav-item"><i class="bi bi-box-arrow-left"></i><span>Đăng xuất</span></a>
+            </div>
+        </nav>
+    </body>
+</html>

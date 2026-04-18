@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head><title>Sửa game</title></head>
+<body>
+<div layout:fragment="body-content">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb" style="font-size:13px;">
+            <li class="breadcrumb-item"><a th:href="@{/admin/game}">Quản lý game</a></li>
+            <li class="breadcrumb-item active"
+                th:text="'Sửa: ' + ${game.tenGame}">Sửa game</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a th:href="@{/admin/game}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h5 class="mb-0 fw-bold">
+            <i class="bi bi-pencil-square me-2 text-warning"></i>
+            Sửa game: <span class="text-primary" th:text="${game.tenGame}"></span>
+        </h5>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form th:action="@{/admin/game/edit/{id}(id=${game.id})}"
+          th:object="${game}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <div class="row g-4">
+
+            <!-- CỘT TRÁI -->
+            <div class="col-lg-8">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle me-2"></i>Thông tin cơ bản
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Tên game <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" th:field="*{tenGame}"
+                                   class="form-control form-control-lg" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Mô tả game</label>
+                            <textarea th:field="*{moTa}" class="form-control" rows="5"></textarea>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nhà phát hành</label>
+                                <input type="text" th:field="*{nhaPhatHanh}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Ngày phát hành</label>
+                                <input type="date" th:field="*{ngayPhatHanh}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label fw-semibold">Thể loại</label>
+                            <input type="text" th:field="*{theLoai}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-pc-display me-2"></i>Yêu cầu hệ thống
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Cấu hình tối thiểu</label>
+                            <textarea th:field="*{yeuCauToiThieu}" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <label class="form-label">Cấu hình đề xuất</label>
+                            <textarea th:field="*{yeuCauDeXuat}" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-download me-2"></i>Thông tin tải về
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Dung lượng</label>
+                                <div class="input-group">
+                                    <input type="text" th:field="*{dungLuong}" class="form-control">
+                                    <span class="input-group-text">GB</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phiên bản</label>
+                                <input type="text" th:field="*{phienBan}" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /col-lg-8 -->
+
+            <!-- CỘT PHẢI -->
+            <div class="col-lg-4">
+
+                <!-- Upload ảnh bìa (có hiển thị ảnh hiện tại) -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-image me-2"></i>Ảnh bìa game
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Ảnh hiện tại -->
+                        <div class="mb-2 text-center">
+                            <img id="imgPreview"
+                                 th:src="${game.anhBia != null and !#strings.isEmpty(game.anhBia)}
+                                          ? ${game.anhBia}
+                                          : '/images/no-image.jpg'"
+                                 alt="Ảnh bìa hiện tại"
+                                 class="img-fluid rounded"
+                                 style="width:100%; height:200px; object-fit:cover;
+                                        border:2px dashed #dee2e6; cursor:pointer;"
+                                 onclick="document.getElementById('anhBiaFile').click()">
+                            <!--
+                                th:src kiểm tra game.anhBia có null không
+                                Nếu có ảnh → hiển thị ảnh hiện tại
+                                Nếu không → hiển thị ảnh mặc định
+                            -->
+                        </div>
+
+                        <!-- Đường dẫn ảnh hiện tại (chỉ hiển thị thông tin) -->
+                        <div th:if="${game.anhBia != null and !#strings.isEmpty(game.anhBia)}"
+                             class="mb-2 p-2 bg-light rounded" style="font-size:12px;">
+                            <i class="bi bi-check-circle-fill text-success me-1"></i>
+                            Ảnh hiện tại: <code th:text="${game.anhBia}"></code>
+                        </div>
+
+                        <!-- Input chọn file mới -->
+                        <input type="file"
+                               id="anhBiaFile"
+                               name="anhBiaFile"
+                               accept="image/*"
+                               class="form-control"
+                               onchange="previewAnh(this)">
+                        <div class="form-text mt-1">
+                            Chọn file mới để thay ảnh. Để trống = giữ ảnh cũ.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Phân loại -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-tag me-2"></i>Phân loại
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Danh mục <span class="text-danger">*</span>
+                            </label>
+                            <select name="idDanhMuc" class="form-select" required>
+                                <!--
+                                    th:selected kiểm tra danh mục đang chọn của game này
+                                    game.danhMuc.id == dm.id → selected
+                                -->
+                                <option th:each="dm : ${danhMucList}"
+                                        th:value="${dm.id}"
+                                        th:text="${dm.tenDanhMuc}"
+                                        th:selected="${game.danhMuc != null and dm.id == game.danhMuc.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label fw-semibold">Trạng thái</label>
+                            <select th:field="*{trangThai}" class="form-select">
+                                <option value="ACTIVE"
+                                        th:selected="${game.trangThai == 'ACTIVE'}">🟢 Đang bán</option>
+                                <option value="COMING_SOON"
+                                        th:selected="${game.trangThai == 'COMING_SOON'}">🔵 Sắp ra mắt</option>
+                                <option value="INACTIVE"
+                                        th:selected="${game.trangThai == 'INACTIVE'}">🔴 Ẩn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Giá cả -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-currency-dollar me-2"></i>Giá cả
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Giá gốc (USD)</label>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold">$</span>
+                                <input type="number" th:field="*{giaGoc}"
+                                       class="form-control" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Giá bán (VNĐ) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="number" th:field="*{giaVnd}"
+                                       class="form-control" min="0" required
+                                       oninput="tinhGiaGiam()">
+                                <span class="input-group-text">₫</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Giảm giá
+                                <span class="badge bg-danger ms-1" id="badgePhanTram"
+                                      th:text="${(game.phanTramGiam ?: 0) + '%'}">0%</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" th:field="*{phanTramGiam}"
+                                       class="form-control" min="0" max="100"
+                                       id="phanTramInput"
+                                       oninput="tinhGiaGiam(); capNhatBadge(this.value)">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Giá sau giảm (VNĐ)</label>
+                            <div class="input-group">
+                                <input type="number" th:field="*{giaGiam}"
+                                       id="giaGiamInput"
+                                       class="form-control bg-light" min="0">
+                                <span class="input-group-text">₫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /col-lg-4 -->
+        </div><!-- /row -->
+
+        <!-- Nút submit -->
+        <div class="mt-4 d-flex gap-3">
+            <button type="submit" class="btn btn-warning btn-lg px-5">
+                <i class="bi bi-save me-2"></i>Lưu thay đổi
+            </button>
+            <a th:href="@{/admin/game}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-x me-1"></i>Hủy
+            </a>
+        </div>
+
+    </form>
+
+    <script>
+        function previewAnh(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('imgPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function tinhGiaGiam() {
+            const giaVnd = parseFloat(document.querySelector('[name="giaVnd"]').value) || 0;
+            const phanTram = parseFloat(document.getElementById('phanTramInput').value) || 0;
+            if (phanTram > 0 && giaVnd > 0) {
+                document.getElementById('giaGiamInput').value =
+                    Math.round(giaVnd * (1 - phanTram / 100));
+            }
+        }
+        function capNhatBadge(val) {
+            document.getElementById('badgePhanTram').textContent = (val || 0) + '%';
+        }
+    </script>
+
+</div>
+</body>
+</html>

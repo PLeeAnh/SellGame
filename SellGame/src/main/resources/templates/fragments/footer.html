@@ -1,23 +1,163 @@
-<div th:fragment="footer" xmlns:th="http://www.thymeleaf.org">
-    <!-- All Jquery -->
-    <script th:src="@{/assets/libs/jquery/dist/jquery.min.js}"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script th:src="@{/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
-    <script th:src="@{/assets/extra-libs/sparkline/sparkline.js}"></script>
-    <!-- Wave Effects -->
-    <script th:src="@{/dist/js/waves.js}"></script>
-    <!-- Menu sidebar -->
-    <script th:src="@{/dist/js/sidebarmenu.js}"></script>
-    <!-- Custom JavaScript -->
-    <script th:src="@{/dist/js/custom.min.js}"></script>
-    <!-- Charts js Files -->
-    <script th:src="@{/assets/libs/flot/excanvas.js}"></script>
-    <script th:src="@{/assets/libs/flot/jquery.flot.js}"></script>
-    <script th:src="@{/assets/libs/flot/jquery.flot.pie.js}"></script>
-    <script th:src="@{/assets/libs/flot/jquery.flot.time.js}"></script>
-    <script th:src="@{/assets/libs/flot/jquery.flot.stack.js}"></script>
-    <script th:src="@{/assets/libs/flot/jquery.flot.crosshair.js}"></script>
-    <script th:src="@{/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js}"></script>
-    <script th:src="@{/dist/js/pages/chart/chart-page-init.js}"></script>
-</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+╔══════════════════════════════════════════════════════╗
+║  SHARED FOOTER FRAGMENT                              ║
+║  Dùng cho customer layout                            ║
+║                                                      ║
+║  Cách dùng:                                          ║
+║  <footer th:replace="~{fragments/footer :: footer}"> ║
+╚══════════════════════════════════════════════════════╝
+-->
+<footer th:fragment="footer"
+        style="background: var(--bg-nav);
+               border-top: 1px solid var(--border);
+               padding: 40px 0 20px;
+               margin-top: 60px;">
+    <div style="max-width:1200px; margin:0 auto; padding:0 20px;">
+        <div class="row g-4">
+
+            <!-- Cột 1: Logo + mô tả -->
+            <div class="col-md-4">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="width:34px; height:34px; background:var(--accent);
+                                border-radius:8px; display:flex; align-items:center;
+                                justify-content:center; color:white; font-size:16px;">
+                        <i class="bi bi-controller"></i>
+                    </div>
+                    <span style="font-size:20px; font-weight:800; color:var(--text-white);">
+                        SELLGAME
+                    </span>
+                </div>
+                <p style="font-size:13px; color:var(--text-muted); max-width:280px; line-height:1.6;">
+                    Nền tảng mua bán game bản quyền uy tín tại Việt Nam.
+                    Nhận key game ngay sau khi thanh toán.
+                </p>
+                <!-- Social links -->
+                <div style="display:flex; gap:8px; margin-top:16px;">
+                    <a href="#" style="width:32px; height:32px; border:1px solid var(--border);
+                                       border-radius:6px; display:flex; align-items:center;
+                                       justify-content:center; color:var(--text-muted);
+                                       text-decoration:none; transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
+                       onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+                        <i class="bi bi-facebook" style="font-size:14px;"></i>
+                    </a>
+                    <a href="#" style="width:32px; height:32px; border:1px solid var(--border);
+                                       border-radius:6px; display:flex; align-items:center;
+                                       justify-content:center; color:var(--text-muted);
+                                       text-decoration:none; transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
+                       onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+                        <i class="bi bi-discord" style="font-size:14px;"></i>
+                    </a>
+                    <a href="#" style="width:32px; height:32px; border:1px solid var(--border);
+                                       border-radius:6px; display:flex; align-items:center;
+                                       justify-content:center; color:var(--text-muted);
+                                       text-decoration:none; transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
+                       onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+                        <i class="bi bi-youtube" style="font-size:14px;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cột 2: Khám phá -->
+            <div class="col-6 col-md-2">
+                <p style="font-size:13px; font-weight:600; color:var(--text-white); margin-bottom:12px;">
+                    Khám phá
+                </p>
+                <!--
+                    Sửa các link ở đây
+                    Muốn thêm link: copy 1 dòng <a> và đổi href + text
+                -->
+                <a href="/games"           class="footer-link">Tất cả game</a>
+                <a href="/games?sort=hot"  class="footer-link">Game bán chạy</a>
+                <a href="/games?sort=new"  class="footer-link">Game mới nhất</a>
+                <a href="/games?sale=true" class="footer-link">Đang sale</a>
+            </div>
+
+            <!-- Cột 3: Tài khoản -->
+            <div class="col-6 col-md-2">
+                <p style="font-size:13px; font-weight:600; color:var(--text-white); margin-bottom:12px;">
+                    Tài khoản
+                </p>
+                <a href="/dang-nhap"      class="footer-link">Đăng nhập</a>
+                <a href="/dang-ky"        class="footer-link">Đăng ký</a>
+                <a href="/ho-so-ca-nhan"  class="footer-link">Hồ sơ cá nhân</a>
+                <a href="/lich-su-mua"    class="footer-link">Lịch sử mua</a>
+                <a href="/thu-vien-game"  class="footer-link">Thư viện game</a>
+            </div>
+
+            <!-- Cột 4: Hỗ trợ -->
+            <div class="col-6 col-md-2">
+                <p style="font-size:13px; font-weight:600; color:var(--text-white); margin-bottom:12px;">
+                    Hỗ trợ
+                </p>
+                <a href="#" class="footer-link">Hướng dẫn mua hàng</a>
+                <a href="#" class="footer-link">Chính sách hoàn tiền</a>
+                <a href="#" class="footer-link">Câu hỏi thường gặp</a>
+                <a href="#" class="footer-link">Liên hệ</a>
+            </div>
+
+            <!-- Cột 5: Thanh toán -->
+            <div class="col-6 col-md-2">
+                <p style="font-size:13px; font-weight:600; color:var(--text-white); margin-bottom:12px;">
+                    Thanh toán
+                </p>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+                    <!-- Badge thanh toán - sửa text tùy ý -->
+                    <span style="background:var(--bg-section); border:1px solid var(--border);
+                                  color:var(--text-muted); font-size:11px; padding:3px 8px;
+                                  border-radius:4px;">MB Bank</span>
+                    <span style="background:var(--bg-section); border:1px solid var(--border);
+                                  color:var(--text-muted); font-size:11px; padding:3px 8px;
+                                  border-radius:4px;">MoMo</span>
+                    <span style="background:var(--bg-section); border:1px solid var(--border);
+                                  color:var(--text-muted); font-size:11px; padding:3px 8px;
+                                  border-radius:4px;">VNPay</span>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+
+        <!-- Bottom bar -->
+        <div style="border-top:1px solid var(--border); margin-top:28px; padding-top:16px;
+                    display:flex; justify-content:space-between; align-items:center;
+                    flex-wrap:wrap; gap:8px;">
+            <span style="font-size:12px; color:var(--text-muted);">
+                © 2025 SELLGAME · Bảo lưu mọi quyền
+            </span>
+            <div style="display:flex; gap:16px;">
+                <a href="#" style="font-size:12px; color:var(--text-muted); text-decoration:none;">
+                    Điều khoản sử dụng
+                </a>
+                <a href="#" style="font-size:12px; color:var(--text-muted); text-decoration:none;">
+                    Chính sách bảo mật
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        /*
+         * CSS cho footer links
+         * Sửa màu hover ở đây: color → var(--accent-hover)
+         */
+        .footer-link {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 3px 0;
+            transition: color 0.15s;
+        }
+        .footer-link:hover { color: var(--text-white); }
+    </style>
+</footer>
+
+</body>
+</html>
