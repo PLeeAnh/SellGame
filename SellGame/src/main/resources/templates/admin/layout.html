@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  ADMIN LAYOUT - Khung chính của tất cả trang admin       ║
+    ║                                                          ║
+    ║  Cách dùng trong trang admin con:                        ║
+    ║  <html layout:decorate="~{admin/layout}">                ║
+    ║  <div layout:fragment="body-content"> nội dung </div>    ║
+    ║                                                          ║
+    ║  Layout tự động gồm: head + sidebar + topbar + content   ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- HEAD: CSS + fonts + biến màu -->
+    <head th:replace="~{admin/fragments/head :: admin-head(${pageTitle})}"></head>
+
+    <body>
+
+        <!-- SIDEBAR -->
+        <div th:replace="~{admin/fragments/menu :: sidebar}"></div>
+
+        <!-- TOPBAR -->
+        <div th:replace="~{admin/fragments/header :: topbar}"></div>
+
+        <!-- MAIN CONTENT -->
+        <main id="sg-content">
+            <!-- Nội dung trang con sẽ được chèn vào đây -->
+            <div th:replace="~{__${content}__}"></div>
+        </main>
+
+        <!-- FOOTER SCRIPTS -->
+        <div th:replace="~{admin/fragments/footer :: scripts}"></div>
+
+    </body>
+</html>

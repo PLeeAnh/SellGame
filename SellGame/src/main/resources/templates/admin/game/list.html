@@ -1,48 +1,134 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-4">
-    <h2>🎮 Quản lý game</h2>
-    <a th:href="@{/admin/game/create}" class="btn btn-primary mb-3">➕ Thêm game</a>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="content">
 
-    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <!-- Thông báo -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Ảnh</th>
-                <th>Tên game</th>
-                <th>Danh mục</th>
-                <th>Giá (VND)</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="g : ${danhSach}">
-                <td th:text="${g.id}"></td>
-                <td><img th:src="@{${g.anhBia}}" width="50" height="50" style="object-fit:cover"></td>
-                <td th:text="${g.tenGame}"></td>
-                <td th:text="${g.danhMuc.tenDanhMuc}"></td>
-                <td th:text="${#numbers.formatDecimal(g.giaVnd, 0, 'COMMA')}"></td>
-                <td>
-                    <span th:if="${g.trangThai == 'ON_SALE'}" class="badge bg-success">Đang bán</span>
-                    <span th:if="${g.trangThai == 'HIDDEN'}" class="badge bg-secondary">Ẩn</span>
-                </td>
-                <td>
-                    <a th:href="@{/admin/game/edit/{id}(id=${g.id})}" class="btn btn-sm btn-warning">✏️ Sửa</a>
-                    <a th:href="@{/admin/game/delete/{id}(id=${g.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Xóa game này?')">🗑️ Xóa</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-</body>
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h5 class="fw-bold mb-1"><i class="bi bi-controller me-2 text-primary"></i>Quản lý Game</h5>
+                <span class="text-muted small">Tổng: <strong th:text="${gamePage.totalElements}">0</strong> game</span>
+            </div>
+            <a th:href="@{/admin/game/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Thêm game</a>
+        </div>
+
+        <!-- Bộ lọc -->
+        <div class="card mb-4">
+            <div class="card-body py-3">
+                <form th:action="@{/admin/game}" method="get" class="row g-2 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label small text-muted mb-1">Tìm kiếm</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tên game...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted mb-1">Trạng thái</label>
+                        <select name="trangThai" class="form-select">
+                            <option value="">-- Tất cả --</option>
+                            <option value="ACTIVE" th:selected="${trangThai == 'ACTIVE'}">🟢 Đang bán</option>
+                            <option value="COMING_SOON" th:selected="${trangThai == 'COMING_SOON'}">🔵 Sắp ra mắt</option>
+                            <option value="INACTIVE" th:selected="${trangThai == 'INACTIVE'}">🔴 Đã ẩn</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i> Lọc</button>
+                    </div>
+                    <div class="col-md-2">
+                        <a th:href="@{/admin/game}" class="btn btn-outline-secondary w-100"><i class="bi bi-x-circle me-1"></i> Xóa lọc</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bảng danh sách -->
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width:50px">#</th>
+                                <th style="width:80px">Ảnh</th>
+                                <th>Tên game</th>
+                                <th style="width:120px">Danh mục</th>
+                                <th style="width:160px">Giá bán</th>
+                                <th style="width:80px">Lượt mua</th>
+                                <th style="width:120px">Trạng thái</th>
+                                <th style="width:130px">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${gamePage.totalElements == 0}">
+                                <td colspan="8" class="text-center py-5">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                                    <span th:if="${#strings.isEmpty(keyword)}">Chưa có game nào</span>
+                                    <span th:unless="${#strings.isEmpty(keyword)}">Không tìm thấy game với từ khóa "<b th:text="${keyword}"></b>"</span>
+                                </td>
+                            </tr>
+                            <tr th:each="game, stat : ${gamePage.content}">
+                                <td class="text-center" th:text="${currentPage * 10 + stat.count}"></td>
+                                <td>
+                                    <img th:src="${game.anhBia != null ? game.anhBia : '/images/no-image.jpg'}"
+                                         style="width:60px; height:45px; object-fit:cover; border-radius:6px;">
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${game.tenGame}"></div>
+                                    <small class="text-muted" th:text="${game.nhaPhatHanh}"></small>
+                                    <span th:if="${game.phanTramGiam != null and game.phanTramGiam > 0}" class="badge bg-danger ms-1" th:text="'-' + ${game.phanTramGiam} + '%'"></span>
+                                </td>
+                                <td><span class="badge bg-secondary" th:text="${game.danhMuc != null ? game.danhMuc.tenDanhMuc : 'N/A'}"></span></td>
+                                <td>
+                                    <div th:if="${game.phanTramGiam != null and game.phanTramGiam > 0}">
+                                        <small class="text-decoration-line-through text-muted" th:text="${#numbers.formatInteger(game.giaVnd, 0, 'COMMA') + '₫'}"></small><br>
+                                        <span class="text-danger fw-bold" th:text="${#numbers.formatInteger(game.giaGiam, 0, 'COMMA') + '₫'}"></span>
+                                    </div>
+                                    <div th:unless="${game.phanTramGiam != null and game.phanTramGiam > 0}" class="fw-semibold" th:text="${#numbers.formatInteger(game.giaVnd, 0, 'COMMA') + '₫'}"></div>
+                                </td>
+                                <td class="text-center fw-semibold" th:text="${game.luotMua != null ? game.luotMua : 0}"></td>
+                                <td>
+                                    <span th:if="${game.trangThai == 'ACTIVE'}" class="badge rounded-pill px-3 py-2 bg-success">Đang bán</span>
+                                    <span th:if="${game.trangThai == 'COMING_SOON'}" class="badge rounded-pill px-3 py-2 bg-info">Sắp ra mắt</span>
+                                    <span th:if="${game.trangThai == 'INACTIVE'}" class="badge rounded-pill px-3 py-2 bg-secondary">Đã ẩn</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/game/edit/{id}(id=${game.id})}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                    <a th:if="${game.trangThai != 'INACTIVE'}" th:href="@{/admin/game/delete/{id}(id=${game.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Ẩn game này?')"><i class="bi bi-eye-slash"></i></a>
+                                    <a th:if="${game.trangThai == 'INACTIVE'}" th:href="@{/admin/game/restore/{id}(id=${game.id})}" class="btn btn-sm btn-outline-success"><i class="bi bi-eye"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Phân trang -->
+            <div th:if="${totalPages != null and totalPages > 1}" class="card-footer d-flex justify-content-between align-items-center py-2">
+                <small>Trang <strong th:text="${currentPage + 1}"></strong> / <strong th:text="${totalPages}"></strong></small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/admin/game(keyword=${keyword}, trangThai=${trangThai}, page=${currentPage-1})}">&laquo;</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(0, totalPages-1)}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:text="${i+1}" th:href="@{/admin/game(keyword=${keyword}, trangThai=${trangThai}, page=${i})}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage+1 >= totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/admin/game(keyword=${keyword}, trangThai=${trangThai}, page=${currentPage+1})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 </html>

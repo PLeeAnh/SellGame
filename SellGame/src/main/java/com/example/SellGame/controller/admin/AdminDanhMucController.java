@@ -1,84 +1,93 @@
 package com.example.SellGame.controller.admin;
 
+import com.example.SellGame.Service.DanhMucService;
 import com.example.SellGame.model.DanhMuc;
-import com.example.SellGame.service.DanhMucService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
-@RequestMapping("/admin/danh-muc")
+@RequestMapping("/admin/danhmuc")
 public class AdminDanhMucController {
 
     @Autowired
     private DanhMucService danhMucService;
 
-    // ========== LIST ==========
+    // LIST
     @GetMapping
     public String list(Model model) {
-        List<DanhMuc> danhSach = danhMucService.getAll();
-        model.addAttribute("danhSach", danhSach);
-        return "admin/danhmuc/list";
+        model.addAttribute("danhMucList", danhMucService.getAll());
+        model.addAttribute("pageTitle", "Quản lý danh mục");
+        model.addAttribute("content", "admin/danhmuc/list");  // 👈 THÊM DÒNG NÀY
+        return "admin/layout";  // 👈 SỬA THÀNH admin/layout
     }
 
-    // ========== CREATE - Hiển thị form ==========
+    // FORM THÊM
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("danhMuc", new DanhMuc());
-        return "admin/danhmuc/create";
+        model.addAttribute("pageTitle", "Thêm danh mục");
+        model.addAttribute("content", "admin/danhmuc/create");  // 👈 THÊM DÒNG NÀY
+        return "admin/layout";  // 👈 SỬA THÀNH admin/layout
     }
 
-    // ========== CREATE - Xử lý submit ==========
+    // XỬ LÝ THÊM
     @PostMapping("/create")
-    public String create(@ModelAttribute DanhMuc danhMuc, RedirectAttributes ra) {
-        try {
-            danhMucService.save(danhMuc);
-            ra.addFlashAttribute("success", "Thêm danh mục thành công!");
-        } catch (Exception e) {
-            ra.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+    public String create(@ModelAttribute DanhMuc danhMuc,
+            RedirectAttributes ra) {
+        if (danhMuc.getTenDanhMuc() == null || danhMuc.getTenDanhMuc().isBlank()) {
+            ra.addFlashAttribute("error", "Tên danh mục không được để trống!");
+            return "redirect:/admin/danhmuc/create";
         }
-        return "redirect:/admin/danh-muc";
+        if (danhMucService.existsByTen(danhMuc.getTenDanhMuc())) {
+            ra.addFlashAttribute("error", "Tên danh mục đã tồn tại!");
+            return "redirect:/admin/danhmuc/create";
+        }
+        danhMucService.save(danhMuc);
+        ra.addFlashAttribute("success", "Thêm danh mục thành công!");
+        return "redirect:/admin/danhmuc";
     }
 
-    // ========== EDIT - Hiển thị form ==========
+    // FORM SỬA
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model, RedirectAttributes ra) {
-        try {
-            DanhMuc danhMuc = danhMucService.getById(id);
-            model.addAttribute("danhMuc", danhMuc);
-            return "admin/danhmuc/edit";
-        } catch (Exception e) {
+    public String editForm(@PathVariable Integer id, Model model,
+            RedirectAttributes ra) {
+        return danhMucService.findById(id).map(dm -> {
+            model.addAttribute("danhMuc", dm);
+            model.addAttribute("pageTitle", "Sửa danh mục");
+            model.addAttribute("content", "admin/danhmuc/edit");  // 👈 THÊM DÒNG NÀY
+            return "admin/layout";  // 👈 SỬA THÀNH admin/layout
+        }).orElseGet(() -> {
             ra.addFlashAttribute("error", "Không tìm thấy danh mục!");
-            return "redirect:/admin/danh-muc";
-        }
+            return "redirect:/admin/danhmuc";
+        });
     }
 
-    // ========== EDIT - Xử lý submit ==========
+    // XỬ LÝ SỬA
     @PostMapping("/edit/{id}")
-    public String update(@PathVariable Integer id, @ModelAttribute DanhMuc danhMuc, RedirectAttributes ra) {
+    public String edit(@PathVariable Integer id,
+            @ModelAttribute DanhMuc form,
+            RedirectAttributes ra) {
         try {
-            danhMuc.setId(id);
-            danhMucService.save(danhMuc);
+            danhMucService.update(id, form);
             ra.addFlashAttribute("success", "Cập nhật danh mục thành công!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/admin/danh-muc";
+        return "redirect:/admin/danhmuc";
     }
 
-    // ========== DELETE ==========
+    // XÓA
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id, RedirectAttributes ra) {
         try {
             danhMucService.delete(id);
             ra.addFlashAttribute("success", "Xóa danh mục thành công!");
         } catch (Exception e) {
-            ra.addFlashAttribute("error", "Không thể xóa danh mục này (có thể đang có game)!");
+            ra.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/admin/danh-muc";
+        return "redirect:/admin/danhmuc";
     }
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  CUSTOMER CATEGORY MENU FRAGMENT                         ║
+        ║  Thanh danh mục nằm dưới navbar, cuộn ngang              ║
+        ║                                                          ║
+        ║  Cách dùng trong customer/layout.html:                   ║
+        ║  <div th:replace="~{customer/fragments/menu :: catmenu}">║
+        ║                                                          ║
+        ║  Dữ liệu: danhMucList inject tự động bởi                 ║
+        ║  DanhMucGlobalController (@ControllerAdvice)             ║
+        ║                                                          ║
+        ║  ĐỔI MÀU ACTIVE/HOVER: sửa border-bottom-color          ║
+        ╚══════════════════════════════════════════════════════════╝
+        -->
+        <div th:fragment="catmenu"
+             style="background: rgba(0,0,0,0.2);
+             border-bottom: 1px solid var(--border);">
+
+            <div style="max-width:1200px; margin:0 auto; padding:0 16px;
+                 display:flex; align-items:center; overflow-x:auto;
+                 scrollbar-width:none; gap:0;"
+                 class="sg-catbar">
+
+                <!-- Link "Tất cả" luôn hiện đầu tiên -->
+                <a href="/games"
+                   class="sg-cat-link"
+                   th:classappend="${#httpServletRequest.requestURI == '/games'} ? ' sg-cat-active'">
+                    🎮 Tất cả
+                </a>
+
+                <!--
+                    Lặp qua danh mục từ DB
+                    DanhMucGlobalController tự động inject vào mọi view
+                    Không cần model.addAttribute trong controller
+                -->
+                <a th:each="dm : ${danhMucList}"
+                   th:href="@{/games/category/{slug}(slug=${dm.slug})}"
+                   th:text="${dm.tenDanhMuc}"
+                   class="sg-cat-link"
+                   th:classappend="${#httpServletRequest.requestURI.contains('/games/category/')} ? ' sg-cat-active'">
+                </a>
+
+            </div>
+
+            <style>
+                /* Ẩn scrollbar */
+                .sg-catbar::-webkit-scrollbar {
+                    display: none;
+                }
+
+                /*
+                 * Mỗi tab danh mục
+                 * Đổi màu active: sửa border-bottom-color
+                 * Đổi font size: sửa font-size
+                 */
+                .sg-cat-link {
+                    color: var(--text-muted);
+                    text-decoration: none;
+                    font-size: 12.5px;
+                    padding: 9px 14px;
+                    white-space: nowrap;
+                    border-bottom: 2px solid transparent;
+                    transition: color .15s, border-color .15s;
+                    flex-shrink: 0;
+                }
+                .sg-cat-link:hover,
+                .sg-cat-active {
+                    color: var(--text-white);
+                    border-bottom-color: var(--accent);   /* ← đổi màu gạch chân active */
+                }
+            </style>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!--
+        ╔══════════════════════════════════════════════════════════╗
+        ║  CUSTOMER NAVBAR HEADER FRAGMENT                         ║
+        ║  Giống Steam: sticky top, search, cart badge, user menu  ║
+        ║                                                          ║
+        ║  Cách dùng trong customer/layout.html:                   ║
+        ║  <header th:replace="~{customer/fragments/header         ║
+        ║           :: navbar}">                                   ║
+        ║                                                          ║
+        ║  THÊM MENU ITEM: tìm .nav-links và thêm <a> vào          ║
+        ║  ĐỔI MÀU NAVBAR: sửa --bg-nav trong customer/head.html   ║
+        ╚══════════════════════════════════════════════════════════╝
+        -->
+        <header th:fragment="navbar"
+                style="background: var(--bg-nav);
+                border-bottom: 1px solid rgba(42,71,94,0.5);
+                position: sticky; top: 0; z-index: 1000;">
+
+            <div style="max-width:1200px; margin:0 auto; padding:0 16px;
+                 display:flex; align-items:center; height:56px; gap:20px;">
+
+                <!-- ══ LOGO ════════════════════════════════════════ -->
+                <a href="/" style="display:flex; align-items:center; gap:8px;
+                   text-decoration:none; flex-shrink:0;">
+                    <div style="width:30px; height:30px; background:var(--accent);
+                         border-radius:6px; display:flex; align-items:center;
+                         justify-content:center; color:white; font-size:15px;">
+                        <i class="bi bi-controller"></i>
+                    </div>
+                    <!--
+                        Đổi tên thương hiệu: sửa SELLGAME bên dưới
+                        Đổi màu chữ: sửa color:#fff
+                    -->
+                    <span style="font-size:17px; font-weight:800; color:#fff;
+                          letter-spacing:1px;">SELLGAME</span>
+                </a>
+
+                <!-- ══ MENU LINKS ══════════════════════════════════ -->
+                <!-- Ẩn trên mobile (xs, sm) — hiện từ md trở lên -->
+                <nav class="d-none d-md-flex" style="gap:2px;">
+                    <a href="/" style="color:var(--text-muted); text-decoration:none;
+                       font-size:13px; padding:6px 10px; border-radius:4px;
+                       transition:all .15s;"
+                       onmouseover="this.style.color = '#fff'; this.style.background = 'rgba(255,255,255,0.08)';"
+                       onmouseout="this.style.color = 'var(--text-muted)'; this.style.background = 'none';">
+                        Trang chủ
+                    </a>
+                    <a href="/games" style="color:var(--text-muted); text-decoration:none;
+                       font-size:13px; padding:6px 10px; border-radius:4px;
+                       transition:all .15s;"
+                       onmouseover="this.style.color = '#fff'; this.style.background = 'rgba(255,255,255,0.08)';"
+                       onmouseout="this.style.color = 'var(--text-muted)'; this.style.background = 'none';">
+                        Cửa hàng
+                    </a>
+                    <a href="/games?sale=true" style="color:#a4d007; text-decoration:none;
+                       font-size:13px; padding:6px 10px;
+                       border-radius:4px; transition:all .15s;"
+                       onmouseover="this.style.background = 'rgba(255,255,255,0.08)';"
+                       onmouseout="this.style.background = 'none';">
+                        🏷️ Sale
+                    </a>
+                </nav>
+
+                <!-- ══ SEARCH BAR ══════════════════════════════════ -->
+                <!--
+                    Tìm kiếm → GET /games/search?q=...
+                    Đổi URL: sửa th:action bên dưới
+                    Đổi placeholder: sửa text "Tìm kiếm game..."
+                -->
+                <form th:action="@{/games/search}" method="get"
+                      style="flex:1; max-width:320px; position:relative;">
+                    <i class="bi bi-search"
+                       style="position:absolute; left:12px; top:50%;
+                       transform:translateY(-50%);
+                       color:var(--text-muted); font-size:13px;
+                       pointer-events:none;"></i>
+                    <input type="text" name="q"
+                           placeholder="Tìm kiếm game..."
+                           autocomplete="off"
+                           style="width:100%; background:rgba(255,255,255,0.07);
+                           border:1px solid var(--border); color:var(--text-white);
+                           border-radius:20px; padding:6px 16px 6px 36px;
+                           font-size:13px; outline:none; transition:all .2s;"
+                           onfocus="this.style.background = 'rgba(255,255,255,0.12)';
+                           this.style.borderColor = 'var(--accent)';
+                           this.style.boxShadow = '0 0 0 2px rgba(26,159,255,0.2)';"
+                           onblur="this.style.background = 'rgba(255,255,255,0.07)';
+                           this.style.borderColor = 'var(--border)';
+                           this.style.boxShadow = 'none';">
+                </form>
+
+                <!-- ══ ACTIONS BÊN PHẢI ════════════════════════════ -->
+                <div style="display:flex; align-items:center; gap:6px; margin-left:auto; flex-shrink:0;">
+
+                    <!-- Giỏ hàng -->
+                    <a href="/gio-hang"
+                       style="position:relative; display:flex; align-items:center; gap:6px;
+                       background:none; border:1px solid var(--border);
+                       color:var(--text-muted); font-size:13px; padding:5px 12px;
+                       border-radius:4px; text-decoration:none; transition:all .2s;"
+                       onmouseover="this.style.borderColor = 'var(--accent)'; this.style.color = '#fff';"
+                       onmouseout="this.style.borderColor = 'var(--border)'; this.style.color = 'var(--text-muted)';">
+                        <i class="bi bi-bag"></i>
+                        <span class="d-none d-sm-inline">Giỏ hàng</span>
+                        <!--
+                            Khang: thay 0 bằng ${session.cartCount ?: 0}
+                            Hoặc dùng th:text="${#maps.size(session.cart ?: {})}"
+                        -->
+                        <span th:if="${(session.cartCount ?: 0) > 0}"
+                              th:text="${session.cartCount}"
+                              style="position:absolute; top:-6px; right:-6px;
+                              background:var(--danger); color:#fff;
+                              font-size:10px; font-weight:700;
+                              min-width:16px; height:16px; border-radius:8px;
+                              display:flex; align-items:center; justify-content:center;
+                              padding:0 4px;">
+                        </span>
+                    </a>
+
+                    <!-- Chưa đăng nhập -->
+                    <div th:if="${session.userLogged == null}"
+                         style="display:flex; gap:6px;">
+                        <a href="/dang-nhap"
+                           style="background:none; border:1px solid var(--border);
+                           color:var(--text-muted); font-size:13px; padding:5px 12px;
+                           border-radius:4px; text-decoration:none; transition:all .2s;"
+                           onmouseover="this.style.borderColor = 'var(--accent)'; this.style.color = '#fff';"
+                           onmouseout="this.style.borderColor = 'var(--border)'; this.style.color = 'var(--text-muted)';">
+                            Đăng nhập
+                        </a>
+                        <a href="/dang-ky"
+                           style="background:var(--accent); border:1px solid var(--accent);
+                           color:#fff; font-size:13px; padding:5px 14px;
+                           border-radius:4px; text-decoration:none; transition:all .2s;"
+                           onmouseover="this.style.background = 'var(--accent-hover)';"
+                           onmouseout="this.style.background = 'var(--accent)';">
+                            Đăng ký
+                        </a>
+                    </div>
+
+                    <!-- Đã đăng nhập: dropdown user -->
+                    <div th:if="${session.userLogged != null}" class="dropdown">
+                        <button style="background:none; border:1px solid var(--border);
+                                color:var(--text-muted); font-size:13px; padding:5px 12px;
+                                border-radius:4px; cursor:pointer; transition:all .2s;
+                                display:flex; align-items:center; gap:6px;"
+                                data-bs-toggle="dropdown"
+                                onmouseover="this.style.borderColor = 'var(--accent)'; this.style.color = '#fff';"
+                                onmouseout="this.style.borderColor = 'var(--border)';
+                                this.style.color = 'var(--text-muted)';">
+                            <i class="bi bi-person-circle" style="font-size:15px;"></i>
+                            <span class="d-none d-sm-inline"
+                                  th:text="${session.userLogged.hoTen}">User</span>
+                            <i class="bi bi-chevron-down" style="font-size:9px;"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            style="background:var(--bg-section); border-color:var(--border);
+                            min-width:180px; font-size:13px;">
+                            <li>
+                                <a class="dropdown-item" href="/ho-so-ca-nhan"
+                                   style="color:var(--text-main);">
+                                    <i class="bi bi-person me-2"></i>Hồ sơ cá nhân
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/lich-su-mua"
+                                   style="color:var(--text-main);">
+                                    <i class="bi bi-receipt me-2"></i>Lịch sử mua
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/thu-vien-game"
+                                   style="color:var(--text-main);">
+                                    <i class="bi bi-collection me-2"></i>Thư viện game
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" style="border-color:var(--border);"></li>
+                            <li>
+                                <a class="dropdown-item" href="/logout"
+                                   style="color:var(--danger);">
+                                    <i class="bi bi-box-arrow-left me-2"></i>Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div><!-- /actions -->
+            </div>
+
+            <style>
+                /* Override Bootstrap dropdown để match dark theme */
+                .dropdown-menu {
+                    background: var(--bg-section);
+                    border-color: var(--border);
+                }
+                .dropdown-item:hover {
+                    background: var(--border);
+                    color: var(--text-white);
+                }
+            </style>
+        </header>
+
+    </body>
+</html>

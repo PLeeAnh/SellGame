@@ -12,10 +12,13 @@
                         <p class="mb-3"><strong>Họ và tên:</strong> <span th:text="${user.hoTen}"></span></p>
                         <p class="mb-3"><strong>Email:</strong> <span th:text="${user.email}"></span></p>
                         <p class="mb-3"><strong>Số điện thoại:</strong> 
+                            <!-- 👈 SỬA: so_dien_thoai → soDienThoai -->
                             <span th:if="${user.soDienThoai != null and user.soDienThoai != ''}" th:text="${user.soDienThoai}"></span>
                             <span th:unless="${user.soDienThoai != null and user.soDienThoai != ''}" class="text-muted fst-italic">Chưa cập nhật</span>
                         </p>
-                        <p class="mb-3"><strong>Vai trò:</strong> <span class="badge bg-info text-dark rounded-pill" th:text="${user.vaiTro}"></span></p>
+                        <p class="mb-3"><strong>Vai trò:</strong> 
+                            <span class="badge bg-info text-dark rounded-pill" th:text="${user.vaiTro}"></span>
+                        </p>
                     </div>
                     <hr class="mt-4">
                     <div class="text-center mt-4">

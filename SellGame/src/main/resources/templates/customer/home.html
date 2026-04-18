@@ -1,15 +1,190 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{customer/layout}">
+<head><title>Trang chủ</title></head>
+<body>
+<div layout:fragment="body-content">
+
+    <div class="main-wrapper">
+
+        <!-- ═══════════════════════════════
+             BANNER HERO
+             Chỉnh màu gradient ở đây:
+             --banner-from và --banner-to
+        ═══════════════════════════════ -->
+        <div class="banner-hero mb-4"
+             style="background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);
+                    border-radius: 12px; padding: 48px 40px;
+                    border: 1px solid #2a475e; position:relative; overflow:hidden;">
+
+            <!-- Hiệu ứng nền -->
+            <div style="position:absolute; top:-50px; right:-50px;
+                        width:300px; height:300px;
+                        background: radial-gradient(circle, rgba(26,159,255,0.1) 0%, transparent 70%);
+                        pointer-events:none;"></div>
+
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="mb-2">
+                        <span class="badge"
+                              style="background:#e94560; color:white; font-size:11px; padding:4px 10px;">
+                            🔥 HOT DEAL
+                        </span>
+                    </div>
+                    <h2 style="color:white; font-weight:800; font-size:32px; margin-bottom:12px;">
+                        Mua game bản quyền<br>
+                        <span style="color:#66c0f4;">giá tốt nhất Việt Nam</span>
+                    </h2>
+                    <p style="color:#8fa6ba; font-size:15px; margin-bottom:24px;">
+                        Hàng nghìn tựa game PC, PS5 với giá ưu đãi.<br>
+                        Nhận key game ngay sau khi thanh toán.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/games"
+                           style="background:#1a9fff; color:white; text-decoration:none;
+                                  padding:10px 24px; border-radius:6px;
+                                  font-weight:600; font-size:14px;">
+                            Khám phá game
+                        </a>
+                        <a href="/games?sale=true"
+                           style="background:rgba(255,255,255,0.1); color:white; text-decoration:none;
+                                  padding:10px 24px; border-radius:6px;
+                                  font-weight:600; font-size:14px;
+                                  border: 1px solid rgba(255,255,255,0.2);">
+                            🏷️ Xem sale
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center">
+                    <!-- Placeholder ảnh banner - thay bằng ảnh thật -->
+                    <div style="font-size:100px; opacity:0.3;">🎮</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════
+             SECTION: GAME HOT
+             Minh sẽ ghép dữ liệu gameHot từ controller
+        ═══════════════════════════════ -->
+        <section class="mb-5">
+            <div class="section-heading">
+                <h5>
+                    <span style="color:#e94560;">🔥</span> Game bán chạy
+                </h5>
+                <a href="/games?sort=hot" class="see-all">Xem tất cả →</a>
+            </div>
+
+            <div class="row g-3">
+                <!--
+                    Minh: thay th:each bằng: th:each="game : ${gameHot}"
+                    Hiện tại dùng dữ liệu giả để hiển thị layout
+                -->
+                <div th:if="${gameHot != null and !#lists.isEmpty(gameHot)}"
+                     class="col-6 col-sm-4 col-md-3 col-lg-2"
+                     th:each="game : ${gameHot}">
+                    <a th:href="@{/games/{id}(id=${game.id})}" class="game-card">
+                        <img th:src="${game.anhBia ?: '/images/no-image.jpg'}"
+                             th:alt="${game.tenGame}"
+                             class="game-card-img">
+                        <div class="game-card-body">
+                            <div class="game-card-title" th:text="${game.tenGame}"></div>
+                            <div class="game-card-genre" th:text="${game.theLoai}"></div>
+                            <div class="game-card-price">
+                                <span th:if="${game.phanTramGiam > 0}"
+                                      class="badge-sale"
+                                      th:text="'-' + ${game.phanTramGiam} + '%'"></span>
+                                <span th:if="${game.phanTramGiam > 0}"
+                                      class="price-original"
+                                      th:text="${#numbers.formatInteger(game.giaVnd,0,'COMMA') + '₫'}"></span>
+                                <span class="price-sale"
+                                      th:text="${#numbers.formatInteger(game.getGiaHienThi(),0,'COMMA') + '₫'}"></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Placeholder khi chưa có dữ liệu (xóa khi Minh ghép API) -->
+                <div th:if="${gameHot == null or #lists.isEmpty(gameHot)}"
+                     class="col-12 text-center py-5">
+                    <i class="bi bi-controller" style="font-size:48px; color:#2a475e;"></i>
+                    <p style="color:#8fa6ba; margin-top:12px;">
+                        Chưa có game. Minh ghép dữ liệu vào đây nhé!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════
+             SECTION: GAME MỚI
+             Minh sẽ ghép dữ liệu gameMoi
+        ═══════════════════════════════ -->
+        <section class="mb-5">
+            <div class="section-heading">
+                <h5>
+                    <span style="color:#66c0f4;">✨</span> Game mới nhất
+                </h5>
+                <a href="/games?sort=new" class="see-all">Xem tất cả →</a>
+            </div>
+
+            <div class="row g-3">
+                <div th:if="${gameMoi != null and !#lists.isEmpty(gameMoi)}"
+                     class="col-6 col-sm-4 col-md-3 col-lg-2"
+                     th:each="game : ${gameMoi}">
+                    <a th:href="@{/games/{id}(id=${game.id})}" class="game-card">
+                        <img th:src="${game.anhBia ?: '/images/no-image.jpg'}"
+                             th:alt="${game.tenGame}"
+                             class="game-card-img">
+                        <div class="game-card-body">
+                            <div class="game-card-title" th:text="${game.tenGame}"></div>
+                            <div class="game-card-genre" th:text="${game.theLoai}"></div>
+                            <div class="game-card-price">
+                                <span th:if="${game.phanTramGiam > 0}"
+                                      class="badge-sale"
+                                      th:text="'-' + ${game.phanTramGiam} + '%'"></span>
+                                <span class="price-sale"
+                                      th:text="${#numbers.formatInteger(game.getGiaHienThi(),0,'COMMA') + '₫'}"></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div th:if="${gameMoi == null or #lists.isEmpty(gameMoi)}"
+                     class="col-12 text-center py-5">
+                    <i class="bi bi-stars" style="font-size:48px; color:#2a475e;"></i>
+                    <p style="color:#8fa6ba; margin-top:12px;">
+                        Game mới sẽ hiển thị ở đây
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════
+             SECTION: DANH MỤC
+        ═══════════════════════════════ -->
+        <section class="mb-5" th:if="${danhMucList != null and !#lists.isEmpty(danhMucList)}">
+            <div class="section-heading">
+                <h5>📂 Duyệt theo danh mục</h5>
+            </div>
+            <div class="row g-2">
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2"
+                     th:each="dm : ${danhMucList}">
+                    <a th:href="@{/games/category/{slug}(slug=${dm.slug})}"
+                       class="d-block p-3 text-center text-decoration-none"
+                       style="background:#16202d; border:1px solid #2a475e;
+                              border-radius:8px; transition:all 0.2s;
+                              color:#c6d4df; font-size:13px; font-weight:500;"
+                       onmouseover="this.style.borderColor='#1a9fff'; this.style.color='white';"
+                       onmouseout="this.style.borderColor='#2a475e'; this.style.color='#c6d4df';">
+                        <div style="font-size:24px; margin-bottom:6px;">🎮</div>
+                        <span th:text="${dm.tenDanhMuc}"></span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /main-wrapper -->
+
+</div>
+</body>
 </html>
